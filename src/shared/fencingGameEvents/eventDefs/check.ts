@@ -74,39 +74,30 @@ const check: EventDef<CheckEvent> = {
     };
 
     const isCorrect = state.game.solution[r][c] === teamGrid[r][c].value;
-    if (isCorrect) {
+    if (!isCorrect) {
+      // End game on incorrect letter
       return {
         ...state,
+        gameOver: true, // Set gameOver flag
         game: {
-          ...state.game!,
-          teamClueVisibility: {
-            ...state.game.teamClueVisibility,
-            [teamId]: {
-              across: _.assign(state.game.teamClueVisibility![teamId].across, {
-                [teamGrid[r][c].parents!.across]: true,
-              }),
-              down: _.assign(state.game.teamClueVisibility![teamId].down, {
-                [teamGrid[r][c].parents!.down]: true,
-              }),
-            },
+          ...state.game,
+          teamGrids: {
+            ...state.game.teamGrids,
+            [teamId]: updateCellIncorrect(teamGrid),
           },
-          teamGrids: _.fromPairs(
-            _.toPairs(state.game!.teamGrids).map(([tId, tGrid]) => [tId, updateCellCorrect(tGrid)])
-          ),
-          grid: updateCellCorrect(state.game.grid),
         },
         users: {
           ...state.users,
           [id]: {
             ...state.users[id],
-            score: (state.users[id].score || 0) + 1,
+            misses: (state.users[id].misses || 0) + 1,
           },
         },
         teams: {
           ...state.teams,
           [teamId]: {
             ...state.teams[teamId],
-            score: state.teams[teamId]!.score + 1,
+            guesses: state.teams[teamId]!.guesses + 1,
           },
         },
       };

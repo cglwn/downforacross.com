@@ -4,6 +4,7 @@ export interface GameState {
   loaded: boolean;
   started: boolean;
   startedAt: number | null;
+  gameOver?: boolean;
   game: null | GameJson;
   users: {
     [id: string]: UserJson;

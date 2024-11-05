@@ -365,6 +365,14 @@ export default class Game extends Component {
 
   render() {
     const padding = this.props.mobile ? 0 : 20;
+    const {gameOver} = this.game;
+    if (gameOver) {
+      return (
+        <div className="game-over">
+          Game Over! You entered an incorrect letter.
+        </div>
+      );
+    }
     return (
       <Flex column grow={1}>
         {this.renderToolbar()}
